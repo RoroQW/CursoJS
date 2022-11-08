@@ -1,80 +1,68 @@
+let totalCompra = 0,
+    seguirComprando = true
+const CARRITO = []
+const PRODUCTOS = []
 
-let savedPIN = '1234';
-
-function login() {
-    
-    let ingresar = false;
-
-    for (let i = 2; i >= 0; i--) {
-
-        let userPIN = prompt('Por favor, ingresá tu PIN. Tenés ' + (i + 1) + ' oportunidades.');
-
-        if (userPIN === savedPIN) {
-
-            alert('Ingreso exitoso. Bienvenido/a!');
-            ingresar = true;
-            break;
-
-        } else {
-
-            alert('PIN erróneo. Te quedan ' + i + ' intentos.');
-
-        }
-
+class Zapatilla {
+    constructor(id, marca, modelo, precio, stock){
+        this.id = id;
+        this.marca = marca;
+        this.precio = precio;
+        this.modelo = modelo;
+        this.stock = stock;
     }
-
-    return ingresar;
-
 }
 
+const jordan = new Zapatilla(1, "Jordan", "Fly", 7200, 35)
+const nike = new Zapatilla(2, "Nike", "Air Max", 10000, 50)
+const adidas = new Zapatilla(3, "Adidas", "Yeezy", 59999, 10)
+const puma = new Zapatilla(4, "Puma", "Cave", 15000, 80)
+PRODUCTOS.push(jordan)
+PRODUCTOS.push(nike)
+PRODUCTOS.push(adidas)
+PRODUCTOS.push(puma)
 
-if (login()) {
-    //"Aqui se accede" a la info de la cuenta
-    let saldo = 30000000;
+console.log(PRODUCTOS);
 
-    let opcion = prompt('Por favor, elegí una opción: \n1- Consulta de saldo. \n2 - Retirar dinero. \n3 - Depósito. \nPresioná X para finalizar.');
-
-    while (opcion != 'X' && opcion != 'x') {
-
-        switch (opcion) {
-
-            case '1':
-                alert('Tu saldo es $ ' + saldo);
-                break;
-
-            case '2':
-                let retiro = parseInt(prompt('Por favor, ingresá cantidad a retirar'));
-                if (retiro <= saldo) {
-                    saldo -= retiro;
-                    //saldo = saldo-retiro;
-                    alert('Retiro exitoso! Tu nuevo saldo es $ ' + saldo);
-                } else {
-                    alert('Fondos insuficientes');
-                }
-                break;
-
-            case '3':
-                let deposito = parseInt(prompt('Ingresa monto a depositar'));
-                saldo += deposito;
-                // Esto es equivalente a la linea anterior
-                //saldo = saldo+deposito;
-                alert('Depósito exitoso! Tu nuevo saldo es $ ' + saldo);
-                break;
-
-            default:
-                alert('Elegiste una opción inválida');
-                break;
-
-        }
-
-        opcion = prompt('Por favor, elegí una opción: \n1- Consulta de saldo. \n2 - Retirar dinero. \n3 - Depósito. \n Presioná X para finalizar.');
-
+const descuento = (cantidad, totalCompra) => {
+    let totalCompra2 = totalCompra
+    if (cantidad >= 2 && cantidad < 5){
+        let descuento = (totalCompra * 10) / 100
+        console.log(descuento);
+        totalCompra2 -= descuento
+    }else if (cantidad >= 5){
+        let descuento = (totalCompra * 20) / 100
+        console.log(descuento);
+        totalCompra2 -= descuento
     }
-
-} else {
-    //aviso de bloqueo de tarjeta
-    alert('Por tu seguridad, retendremos tu tarjeta. Concactate con nosotros por favor.');
-
+    console.log(totalCompra2);
+    return totalCompra2
 }
 
-alert('Muchas gracias!');
+const  iniciarCompra = () => {
+    while (seguirComprando) {
+        let producto = parseInt(prompt('Escoge el producto que deseas comprar: 1.Jordan - 2.Nike - 3.Adidas - 4.Puma'))
+        while (producto !== 1 && producto !== 2 && producto !== 3 && producto !== 4){
+            producto = parseInt(prompt('Escoge el producto que deseas comprar: 1.Jordan - 2.Nike - 3.Adidas - 4.Puma'))
+        }
+        CARRITO.push(PRODUCTOS[producto - 1])
+        let seguir = parseInt(prompt('¿Desea seguir comprando?: 1.SI - 2.NO'))
+        while (seguir !== 1 && seguir !== 2){
+            seguir = parseInt(prompt('¿Desea seguir comprando?: 1.SI - 2.NO'))
+        }
+        if (seguir === 2) {
+            seguirComprando = false
+        }
+    }
+    console.log(CARRITO);
+
+    totalCompra = CARRITO.map(producto => producto.precio).reduce((a, b) => a + b)
+    console.log(totalCompra);
+    alert(`El total de su compra es de $${totalCompra}`)
+    if(CARRITO.length > 1){
+        let discount = descuento(CARRITO.length, totalCompra)
+        alert(`Con el descuento aplicado, termina pagando: $${discount}`)
+    }
+}
+
+iniciarCompra()
